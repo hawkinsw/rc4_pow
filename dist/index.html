@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Proof of work demonstration</title>
+  <script src="./index.js"></script>
+  <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body onload="jsc4.configure()">
+  <table class="content">
+    <tr class="header_box">
+      <td>Difficulty</td>
+    </tr>
+    <tr class="value_box">
+      <td><input type=text id=difficulty_input class="io_box"/></td>
+    </tr>
+    <tr class="header_box">
+      <td>Raw Data (The Data to Hash)</td>
+    </tr>
+    <tr class="value_box">
+      <td><textarea id=raw_data_input class="io_box"></textarea></td>
+    </tr>
+    <tr class="header_box">
+      <td>Result</td>
+    </tr>
+    <tr class="value_box">
+      <td><input type=text id=work_result_output class="io_box"/></td>
+    </tr>
+    <tr class="header_box">
+      <td>Attempts</td>
+    </tr>
+    <tr class="value_box">
+      <td><input type=text id=work_attempts_output class="io_box"/></td>
+    </tr>
+  </table>
+  <input type="button" onclick="jsc4.calculate()" value="Hash"/>
+</body>
+
+</html>

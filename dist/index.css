@@ -1,0 +1,14 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+.content {
+  width: 100%;
+}
+.value_box {
+  background: #7f8285;
+}
+.io_box {
+  width: 100%;
+}

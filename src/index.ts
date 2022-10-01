@@ -1,39 +1,43 @@
 import * as $ from 'jquery'
-import { RC4 } from './rc4';
-import { fromHex } from './utils';
+import { ProofOfWorkRequest } from './rc4';
 
-var nonce_test_element: JQuery<HTMLElement> | null;
-var nonce_test_input_element: JQuery<HTMLInputElement> | null;
+import { ProofOfWorkCompleteEvent, ProofOfWorkRequestEvent } from './proofofwork';
+
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+
+var difficulty_input: JQuery<HTMLInputElement> | null;
 var raw_data_input_element: JQuery<HTMLInputElement> | null;
 var work_result_output_element: JQuery<HTMLElement> | null;
+var work_attempts_output_element: JQuery<HTMLElement> | null;
 
 export function configure(): void {
-  nonce_test_input_element = $('#nonce_test_input')
+  difficulty_input = $('#difficulty_input')
   raw_data_input_element = $('#raw_data_input')
-  nonce_test_element = $('#nonce_test')
   work_result_output_element = $('#work_result_output')
-  RC4.initialize()
+  work_attempts_output_element = $('#work_attempts_output')
 }
 
+/*
+ * A function generator that will generate a function that unwraps
+ * the event (a MessageEvent) and invokes the *real* handler with
+ * the underlying data.
+ */
+function eventDispatcher(handler: (evt: any) => any) {
+  return (actualEvt: MessageEvent) => {
+    handler(actualEvt.data)
+  }
+}
+
+function proofOfWorkResponseHandler(powResponse: ProofOfWorkCompleteEvent) {
+  work_result_output_element.val(powResponse.result)
+  work_attempts_output_element.val(powResponse.attempts)
+}
 
 export function calculate(): void {
+  worker.addEventListener('message', eventDispatcher(proofOfWorkResponseHandler))
   const raw_data_input_value = raw_data_input_element.val() as string
-  var raw_data = new Array<number>(raw_data_input_element.length)
-  var idx = 0
-  for (const c of raw_data_input_value) {
-    raw_data[idx++] = c.charCodeAt(0)
-  }
-  idx = 0
-  const nonce_test_input_value = (nonce_test_input_element.val() as string).split(' ')
-  var nonce_data = new Array<number>(nonce_test_input_value.length)
-  for (const c of nonce_test_input_value) {
-    nonce_data[idx++] = fromHex(c)
-  }
-
-  var hasher = new RC4()
-  hasher.schedule(nonce_data)
-  hasher.schedule(raw_data)
-  var hashed = hasher.hash(21)
-
-  work_result_output_element.val(hashed.print())
+  const difficulty_input_value = (difficulty_input.val() as number)
+  const request = new ProofOfWorkRequest(raw_data_input_value, difficulty_input_value)
+  const requestEvent = ProofOfWorkRequestEvent.New(request)
+  worker.postMessage(requestEvent)
 }

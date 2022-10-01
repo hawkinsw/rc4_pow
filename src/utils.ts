@@ -5,7 +5,7 @@ export function arrayCopy<T>(a: Array<T>): Array<T> {
 
 export function toHex(n: number): string {
   if (n == 0)
-    return "0"
+    return "00"
 
   var result = ""
   var map = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
@@ -32,4 +32,8 @@ export function fromHex(s: string): number {
 
 export function swap<L, R>(left: L, right: R): [R, L] {
   return [right, left]
+}
+
+export function assert(value: any) {
+  return value == true
 }

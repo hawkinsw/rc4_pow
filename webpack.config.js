@@ -1,7 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: { index: './src/index.ts',
+  worker: './src/worker.ts'
+},
 	mode: 'development',
 	devtool: 'inline-source-map',
 	watch: true,
@@ -18,7 +20,7 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     library: 'jsc4',
     path: path.resolve(__dirname, 'dist'),
   },

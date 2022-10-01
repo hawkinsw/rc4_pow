@@ -8,6 +8,16 @@ export const CreatedBeforeInitialization: Error = new Error('Used RC4 before ini
 // 1 2 3 4
 // Expected result: 12 8f 7e 3b 3c d1 88 d6 30 dd 8d 39 63 28 c2 0 9 2d dc ab 10
 
+export class ProofOfWorkRequest {
+  data: string
+  difficulty: number
+
+  public constructor(data: string, difficulty: number) {
+    this.data = data
+    this.difficulty = difficulty
+  }
+}
+
 export class RC4 {
   private static default_s: Array<number>
   private static initialized: boolean = false
@@ -39,18 +49,7 @@ export class RC4 {
     var j = 0;
     for (var i = 0; i < 256; i++) {
       j = (j + this.S[i] + keymat[i % keymat.length]) % 256;
-      //console.log("Si: " + this.S[i]);
-      //console.log("Sj: " + this.S[j]);
-      //console.log("keymat: " + keymat[i % keymat.length])
-      //console.log("keymat.length: " + keymat.length)
-      //console.log("j: " + j);
-      //console.log("j: " + j);
       [this.S[i], this.S[j]] = swap(this.S[i], this.S[j]);
-      //console.log("After swap: ")
-      //console.log("Si: " + this.S[i]);
-      //console.log("Sj: " + this.S[j]);
-      //console.log("Si: " + this.S[i])
-      //console.log("--------")
     }
   }
 
@@ -64,4 +63,4 @@ export class RC4 {
     }
     return result
   }
-} 
+}
